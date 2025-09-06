@@ -506,27 +506,18 @@ roughScatter <- function(data,
   
   # Handle data frame input
   if (is.data.frame(data)) {
-    # For scatter plots, we need to convert data.frame to column format
-    # that roughViz.js object format expects
-    scatter_data <- list()
-    
+    # Set column references
     if (!is.null(x) && is.character(x) && x %in% names(data)) {
-      scatter_data$x <- as.numeric(data[[x]])
-      config$x <- "x"
+      config$x <- x
     }
     
     if (!is.null(y) && is.character(y) && y %in% names(data)) {
-      scatter_data$y <- as.numeric(data[[y]])  
-      config$y <- "y"
+      config$y <- y
     }
     
     if (!is.null(colorVar) && is.character(colorVar) && colorVar %in% names(data)) {
-      scatter_data[[colorVar]] <- data[[colorVar]]
       config$colorVar <- colorVar
     }
-    
-    # Use the converted data
-    config$data <- scatter_data
   }
   
   # Remove NULL values
@@ -600,8 +591,19 @@ roughStackedBar <- function(data,
     ...
   )
   
-  # Handle data frame input
+  # Handle data frame input - convert to array of objects format
   if (is.data.frame(data)) {
+    # Convert R data.frame to array of objects format expected by roughViz.js
+    stacked_data <- list()
+    for (i in 1:nrow(data)) {
+      row_obj <- list()
+      for (col in names(data)) {
+        row_obj[[col]] <- data[i, col]
+      }
+      stacked_data[[i]] <- row_obj
+    }
+    config$data <- stacked_data
+    
     if (!is.null(labels)) {
       config$labels = labels
     }
