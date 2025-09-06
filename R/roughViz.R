@@ -20,7 +20,7 @@ roughViz <- function(chartType, config, width = NULL, height = NULL, elementId =
   
   # Create widget
   htmlwidgets::createWidget(
-    name = 'roughViz',
+    name = 'roughVizR',
     x,
     width = width,
     height = height,
@@ -603,7 +603,7 @@ roughStackedBar <- function(data,
 #'
 #' @export
 roughVizOutput <- function(outputId, width = '100%', height = '400px'){
-  htmlwidgets::shinyWidgetOutput(outputId, 'roughViz', width, height, package = 'roughVizR')
+  htmlwidgets::shinyWidgetOutput(outputId, 'roughVizR', width, height, package = 'roughVizR')
 }
 
 #' Shiny render function for roughViz

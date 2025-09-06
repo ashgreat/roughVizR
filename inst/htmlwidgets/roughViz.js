@@ -1,6 +1,6 @@
 HTMLWidgets.widget({
 
-  name: 'roughViz',
+  name: 'roughVizR',
 
   type: 'output',
 
