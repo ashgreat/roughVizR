@@ -4,7 +4,7 @@ Title: Hand-Drawn, Sketchy Data Visualizations
 Version: 0.1.0
 Date: 2025-09-05
 Authors@R: c(
-    person("Ashwin", "Malshe", email = "ashwin.malshe@utdallas.edu", role = c("aut", "cre")),
+    person("Ashwin", "Malshe", email = "ashwin.malshe@utsa.edu", role = c("aut", "cre")),
     person("Jared", "Wilber", role = c("aut", "cph"), comment = "roughViz.js library")
     )
 Description: Create hand-drawn, sketchy styled charts including bar charts, 
