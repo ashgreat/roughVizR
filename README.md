@@ -1,15 +1,20 @@
-# roughViz R Package
+# roughVizR
 
-An R interface to the roughViz.js library for creating hand-drawn, sketchy styled charts.
+> An R interface to the [roughViz.js](https://github.com/jwilber/roughViz) library for creating hand-drawn, sketchy styled charts.
+
+[![GitHub](https://img.shields.io/badge/GitHub-ashgreat/roughVizR-blue.svg)](https://github.com/ashgreat/roughVizR)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+
+Create beautiful hand-drawn style charts directly in R! This package provides R bindings for the popular roughViz.js library, allowing you to create sketchy, artistic visualizations with a hand-drawn aesthetic.
 
 ## Installation
 
 ```r
-# Install from GitHub (replace with your actual GitHub username)
-devtools::install_github("yourusername/roughViz")
+# Install from GitHub
+devtools::install_github("ashgreat/roughVizR")
 
 # Or install development version
-devtools::install_github("yourusername/roughViz", ref = "main")
+devtools::install_github("ashgreat/roughVizR", ref = "main")
 ```
 
 ## Usage
@@ -17,7 +22,7 @@ devtools::install_github("yourusername/roughViz", ref = "main")
 ### Basic Bar Chart
 
 ```r
-library(roughViz)
+library(roughVizR)
 
 # Create sample data
 data <- data.frame(
@@ -160,7 +165,7 @@ roughStackedBar(
 
 ```r
 library(shiny)
-library(roughViz)
+library(roughVizR)
 
 ui <- fluidPage(
   titlePanel("roughViz in Shiny"),
