@@ -480,7 +480,7 @@ roughScatter <- function(data,
                          axisRoughness = 0.5,
                          axisStrokeWidth = 0.5,
                          radius = 8,
-                         innerStrokeWidth = 0,
+                         innerStrokeWidth = 1,
                          ...) {
   
   config <- list(
