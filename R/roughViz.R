@@ -504,8 +504,19 @@ roughScatter <- function(data,
     ...
   )
   
-  # Handle data frame input
+  # Handle data frame input - convert to object format
   if (is.data.frame(data)) {
+    # Convert R data.frame to array of objects format expected by roughViz.js
+    scatter_data <- list()
+    for (i in 1:nrow(data)) {
+      row_obj <- list()
+      for (col in names(data)) {
+        row_obj[[col]] <- data[i, col]
+      }
+      scatter_data[[i]] <- row_obj
+    }
+    config$data <- scatter_data
+    
     # Set column references
     if (!is.null(x) && is.character(x) && x %in% names(data)) {
       config$x <- x
