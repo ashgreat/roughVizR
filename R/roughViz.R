@@ -506,9 +506,27 @@ roughScatter <- function(data,
   
   # Handle data frame input
   if (is.data.frame(data)) {
-    if (!is.null(x)) config$x = x
-    if (!is.null(y)) config$y = y
-    if (!is.null(colorVar)) config$colorVar = colorVar
+    # For scatter plots, we need to convert data.frame to column format
+    # that roughViz.js object format expects
+    scatter_data <- list()
+    
+    if (!is.null(x) && is.character(x) && x %in% names(data)) {
+      scatter_data$x <- as.numeric(data[[x]])
+      config$x <- "x"
+    }
+    
+    if (!is.null(y) && is.character(y) && y %in% names(data)) {
+      scatter_data$y <- as.numeric(data[[y]])  
+      config$y <- "y"
+    }
+    
+    if (!is.null(colorVar) && is.character(colorVar) && colorVar %in% names(data)) {
+      scatter_data[[colorVar]] <- data[[colorVar]]
+      config$colorVar <- colorVar
+    }
+    
+    # Use the converted data
+    config$data <- scatter_data
   }
   
   # Remove NULL values
