@@ -504,16 +504,12 @@ roughScatter <- function(data,
     ...
   )
   
-  # Handle data frame input - convert to object format
+  # Handle data frame input - convert to columnar object format
   if (is.data.frame(data)) {
-    # Convert R data.frame to array of objects format expected by roughViz.js
+    # Convert R data.frame to columnar object format expected by drawFromObject
     scatter_data <- list()
-    for (i in 1:nrow(data)) {
-      row_obj <- list()
-      for (col in names(data)) {
-        row_obj[[col]] <- data[i, col]
-      }
-      scatter_data[[i]] <- row_obj
+    for (col in names(data)) {
+      scatter_data[[col]] <- data[[col]]
     }
     config$data <- scatter_data
     
