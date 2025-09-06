@@ -7,6 +7,29 @@
 
 Create beautiful hand-drawn style charts directly in R! This package provides R bindings for the popular roughViz.js library, allowing you to create sketchy, artistic visualizations with a hand-drawn aesthetic.
 
+## Gallery
+
+### Bar Chart
+![Bar Chart](screenshots/bar_plot.png)
+
+### Scatter Plot with Color Grouping
+![Scatter Plot](screenshots/scatter_plot.png)
+
+### Line Graph
+![Line Graph](screenshots/line_graph.png)
+
+### Pie Chart
+![Pie Chart](screenshots/pie_chart.png)
+
+### Donut Chart
+![Donut Chart](screenshots/donut_chart.png)
+
+### Horizontal Bar Chart
+![Horizontal Bar Chart](screenshots/horizontal_bar_chart.png)
+
+### Stacked Bar Chart
+![Stacked Bar Chart](screenshots/stacked_bar_plot.png)
+
 ## Installation
 
 ```r
