@@ -1,6 +1,6 @@
-# Basic Examples for roughViz R Package
+# Basic Examples for roughVizR R Package
 
-library(roughViz)
+library(roughVizR)
 
 # Example 1: Simple Bar Chart
 data1 <- data.frame(

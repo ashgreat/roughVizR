@@ -1,7 +1,7 @@
-# Shiny Example for roughViz R Package
+# Shiny Example for roughVizR R Package
 
 library(shiny)
-library(roughViz)
+library(roughVizR)
 
 ui <- fluidPage(
   titlePanel("roughViz Interactive Demo"),
@@ -225,7 +225,7 @@ server <- function(input, output, session) {
   output$code <- renderPrint({
     data <- chartData()
     
-    code <- paste0("library(roughViz)\n\n",
+    code <- paste0("library(roughVizR)\n\n",
                    "# Create data\n",
                    "data <- ", capture.output(dput(data)), "\n\n",
                    "# Create chart\n")
