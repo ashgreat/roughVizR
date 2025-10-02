@@ -21,7 +21,7 @@ sanitize_common_column <- function(x) {
 
 sanitize_data_frame <- function(data) {
   data[] <- lapply(data, sanitize_common_column)
-  data
+  as.data.frame(data, stringsAsFactors = FALSE)
 }
 
 ensure_columns <- function(data, columns, chart_type) {
