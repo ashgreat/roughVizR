@@ -34,10 +34,10 @@ Create beautiful hand-drawn style charts directly in R! This package provides R 
 
 ```r
 # Install from GitHub
-devtools::install_github("ashgreat/roughVizR", subdir = "roughViz")
+devtools::install_github("ashgreat/roughVizR")
 
 # Or install the development branch explicitly
-remotes::install_github("ashgreat/roughVizR", subdir = "roughViz", ref = "main")
+remotes::install_github("ashgreat/roughVizR", ref = "main")
 ```
 
 ## Usage
