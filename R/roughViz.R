@@ -206,9 +206,13 @@ roughBar <- function(data,
 
     data <- sanitize_data_frame(data)
     ensure_columns(data, c(labels, values), "Bar")
-    config$data <- data[, unique(c(labels, values)), drop = FALSE]
-    config$labels <- labels
-    config$values <- values
+    label_series <- as.character(data[[labels]])
+    value_series <- coerce_numeric_column(data[[values]], values, "Bar")
+
+    config$data <- list(
+      labels = label_series,
+      values = value_series
+    )
   }
 
   config <- drop_nulls(config)
@@ -278,13 +282,16 @@ roughBarH <- function(data,
 
     data <- sanitize_data_frame(data)
     ensure_columns(data, c(labels, values), "BarH")
-    config$data <- data[, unique(c(labels, values)), drop = FALSE]
-    config$labels <- labels
-    config$values <- values
+    label_series <- as.character(data[[labels]])
+    value_series <- coerce_numeric_column(data[[values]], values, "BarH")
+
+    config$data <- list(
+      labels = label_series,
+      values = value_series
+    )
 
     if (is.null(user_margin)) {
-      label_values <- as.character(config$data[[labels]])
-      config$margin <- adjust_left_margin_for_labels(config$margin, label_values)
+      config$margin <- adjust_left_margin_for_labels(config$margin, label_series)
     }
   }
 
@@ -363,9 +370,10 @@ roughDonut <- function(data,
 
     data <- sanitize_data_frame(data)
     ensure_columns(data, c(labels, values), "Donut")
-    config$data <- data[, unique(c(labels, values)), drop = FALSE]
-    config$labels <- labels
-    config$values <- values
+    config$data <- list(
+      labels = as.character(data[[labels]]),
+      values = coerce_numeric_column(data[[values]], values, "Donut")
+    )
   }
 
   config <- drop_nulls(config)
@@ -425,9 +433,10 @@ roughPie <- function(data,
 
     data <- sanitize_data_frame(data)
     ensure_columns(data, c(labels, values), "Pie")
-    config$data <- data[, unique(c(labels, values)), drop = FALSE]
-    config$labels <- labels
-    config$values <- values
+    config$data <- list(
+      labels = as.character(data[[labels]]),
+      values = coerce_numeric_column(data[[values]], values, "Pie")
+    )
   }
 
   config <- drop_nulls(config)

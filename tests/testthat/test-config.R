@@ -7,10 +7,8 @@ test_that("roughBar sanitises factor columns and attaches metadata", {
   widget <- roughBar(data, labels = "region", values = "total")
   config <- widget$x$config
 
-  expect_equal(config$labels, "region")
-  expect_equal(config$values, "total")
-  expect_type(config$data$region, "character")
-  expect_equal(config$data$total, c(10, 12))
+  expect_equal(config$data$labels, c("North", "South"))
+  expect_equal(config$data$values, c(10, 12))
 })
 
 test_that("roughLine coerces numeric series and errors without numeric data", {
@@ -85,4 +83,18 @@ test_that("roughBarH expands margin for long labels by default", {
   custom_margin <- list(top = 10, right = 10, bottom = 10, left = 50)
   widget_custom <- roughBarH(data, labels = "labels", values = "values", margin = custom_margin)
   expect_equal(widget_custom$x$config$margin$left, 50)
+})
+
+test_that("roughBarH works with arbitrary column names", {
+  data <- data.frame(
+    indicator = c("A", "B"),
+    weight_with_sat_act = c(0.16, 0.05),
+    stringsAsFactors = FALSE
+  )
+
+  widget <- roughBarH(data, labels = "indicator", values = "weight_with_sat_act")
+  config <- widget$x$config
+
+  expect_equal(config$data$labels, c("A", "B"))
+  expect_equal(config$data$values, c(0.16, 0.05))
 })
