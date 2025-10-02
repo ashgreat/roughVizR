@@ -2,6 +2,10 @@ drop_nulls <- function(x) {
   x[!vapply(x, is.null, logical(1))]
 }
 
+`%||%` <- function(x, y) {
+  if (is.null(x)) y else x
+}
+
 sanitize_common_column <- function(x) {
   if (is.factor(x)) {
     return(as.character(x))
@@ -73,6 +77,21 @@ sanitize_axis_column <- function(x) {
     return(as.character(x))
   }
   x
+}
+
+estimate_label_margin <- function(labels, base_margin = 150, character_width = 8, padding = 24) {
+  if (!length(labels)) {
+    return(base_margin)
+  }
+  widths <- nchar(labels, type = "width")
+  widths[!is.finite(widths)] <- 0
+  target <- padding + character_width * max(widths)
+  max(base_margin, target)
+}
+
+adjust_left_margin_for_labels <- function(margin, labels) {
+  margin$left <- max(margin$left %||% 0, estimate_label_margin(labels))
+  margin
 }
 
 #' Create a roughViz widget
@@ -223,6 +242,8 @@ roughBarH <- function(data,
                       titleAlign = "center",
                       ...) {
 
+  margin_missing <- missing(margin)
+
   config <- list(
     data = data,
     title = title,
@@ -254,6 +275,11 @@ roughBarH <- function(data,
     config$data <- data[, unique(c(labels, values)), drop = FALSE]
     config$labels <- labels
     config$values <- values
+
+    if (margin_missing) {
+      label_values <- as.character(config$data[[labels]])
+      config$margin <- adjust_left_margin_for_labels(config$margin, label_values)
+    }
   }
 
   config <- drop_nulls(config)

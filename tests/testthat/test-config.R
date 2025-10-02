@@ -72,3 +72,17 @@ test_that("roughStackedBar requires label and numeric value columns", {
     "requires at least one value"
   )
 })
+
+test_that("roughBarH expands margin for long labels by default", {
+  long_labels <- sprintf("Category %s with a very long name", LETTERS[1:4])
+  data <- data.frame(labels = long_labels, values = 1:4, stringsAsFactors = FALSE)
+
+  widget <- roughBarH(data, labels = "labels", values = "values")
+  config <- widget$x$config
+
+  expect_gt(config$margin$left, 150)
+
+  custom_margin <- list(top = 10, right = 10, bottom = 10, left = 50)
+  widget_custom <- roughBarH(data, labels = "labels", values = "values", margin = custom_margin)
+  expect_equal(widget_custom$x$config$margin$left, 50)
+})
