@@ -1,3 +1,80 @@
+drop_nulls <- function(x) {
+  x[!vapply(x, is.null, logical(1))]
+}
+
+sanitize_common_column <- function(x) {
+  if (is.factor(x)) {
+    return(as.character(x))
+  }
+  if (inherits(x, c("Date", "POSIXct", "POSIXlt"))) {
+    return(format(x, tz = "UTC"))
+  }
+  if (is.list(x)) {
+    stop("List-columns are not supported for roughViz charts.", call. = FALSE)
+  }
+  x
+}
+
+sanitize_data_frame <- function(data) {
+  data[] <- lapply(data, sanitize_common_column)
+  data
+}
+
+ensure_columns <- function(data, columns, chart_type) {
+  missing <- setdiff(columns, names(data))
+  if (length(missing)) {
+    stop(
+      sprintf(
+        "%s chart requires column%s: %s",
+        chart_type,
+        if (length(missing) > 1) "s" else "",
+        paste(missing, collapse = ", ")
+      ),
+      call. = FALSE
+    )
+  }
+}
+
+coerce_numeric_column <- function(x, column, chart_type) {
+  if (is.numeric(x)) {
+    return(as.numeric(x))
+  }
+  if (is.logical(x)) {
+    return(as.numeric(x))
+  }
+  if (inherits(x, c("Date", "POSIXct", "POSIXlt"))) {
+    return(as.numeric(x))
+  }
+  if (is.factor(x) || is.character(x)) {
+    suppressWarnings(num <- as.numeric(as.character(x)))
+    if (any(is.na(num) & !is.na(x))) {
+      stop(
+        sprintf(
+          "Column '%s' in %s chart must be numeric after coercion.",
+          column,
+          chart_type
+        ),
+        call. = FALSE
+      )
+    }
+    return(num)
+  }
+  stop(
+    sprintf("Column '%s' in %s chart must be numeric.", column, chart_type),
+    call. = FALSE
+  )
+}
+
+sanitize_axis_column <- function(x) {
+  if (inherits(x, c("Date", "POSIXct", "POSIXlt"))) {
+    return(format(x, tz = "UTC"))
+  }
+  if (is.factor(x)) {
+    return(as.character(x))
+  }
+  x
+}
+
 #' Create a roughViz widget
 #'
 #' @param chartType The type of chart to create
@@ -7,17 +84,16 @@
 #' @param elementId Element ID
 #'
 #' @import htmlwidgets
-#' @importFrom jsonlite toJSON
 #'
 #' @export
 roughViz <- function(chartType, config, width = NULL, height = NULL, elementId = NULL) {
-  
+
   # Create widget
   x <- list(
     chartType = chartType,
     config = config
   )
-  
+
   # Create widget
   htmlwidgets::createWidget(
     name = 'roughVizR',
@@ -52,6 +128,7 @@ roughViz <- function(chartType, config, width = NULL, height = NULL, elementId =
 #' @param axisStrokeWidth Axis stroke width
 #' @param innerStrokeWidth Inner stroke width
 #' @param padding Padding between bars
+#' @param titleAlign Title alignment ('left', 'center', 'right')
 #' @param ... Additional configuration options
 #'
 #' @export
@@ -76,8 +153,9 @@ roughBar <- function(data,
                      axisStrokeWidth = 0.5,
                      innerStrokeWidth = 0,
                      padding = 0.1,
+                     titleAlign = "center",
                      ...) {
-  
+
   config <- list(
     data = data,
     title = title,
@@ -96,20 +174,23 @@ roughBar <- function(data,
     axisStrokeWidth = axisStrokeWidth,
     innerStrokeWidth = innerStrokeWidth,
     padding = padding,
+    titleAlign = titleAlign,
     ...
   )
-  
-  # Handle data frame input
   if (is.data.frame(data)) {
-    if (!is.null(labels) && !is.null(values)) {
-      config$labels = labels
-      config$values = values
+    if (is.null(labels) || is.null(values)) {
+      stop("'labels' and 'values' must be provided when supplying a data frame to roughBar().", call. = FALSE)
     }
+
+    data <- sanitize_data_frame(data)
+    ensure_columns(data, c(labels, values), "Bar")
+    config$data <- data[, unique(c(labels, values)), drop = FALSE]
+    config$labels <- labels
+    config$values <- values
   }
-  
-  # Remove NULL values
-  config <- config[!sapply(config, is.null)]
-  
+
+  config <- drop_nulls(config)
+
   roughViz("Bar", config, width = width, height = height)
 }
 
@@ -139,8 +220,9 @@ roughBarH <- function(data,
                       axisStrokeWidth = 0.5,
                       innerStrokeWidth = 0,
                       padding = 0.1,
+                      titleAlign = "center",
                       ...) {
-  
+
   config <- list(
     data = data,
     title = title,
@@ -159,20 +241,23 @@ roughBarH <- function(data,
     axisStrokeWidth = axisStrokeWidth,
     innerStrokeWidth = innerStrokeWidth,
     padding = padding,
+    titleAlign = titleAlign,
     ...
   )
-  
-  # Handle data frame input
   if (is.data.frame(data)) {
-    if (!is.null(labels) && !is.null(values)) {
-      config$labels = labels
-      config$values = values
+    if (is.null(labels) || is.null(values)) {
+      stop("'labels' and 'values' must be provided when supplying a data frame to roughBarH().", call. = FALSE)
     }
+
+    data <- sanitize_data_frame(data)
+    ensure_columns(data, c(labels, values), "BarH")
+    config$data <- data[, unique(c(labels, values)), drop = FALSE]
+    config$labels <- labels
+    config$values <- values
   }
-  
-  # Remove NULL values
-  config <- config[!sapply(config, is.null)]
-  
+
+  config <- drop_nulls(config)
+
   roughViz("BarH", config, width = width, height = height)
 }
 
@@ -195,6 +280,7 @@ roughBarH <- function(data,
 #' @param margin List with margins
 #' @param legend Show legend
 #' @param legendPosition Legend position ('top', 'bottom', 'left', 'right')
+#' @param titleAlign Title alignment ('left', 'center', 'right')
 #' @param ... Additional configuration options
 #'
 #' @export
@@ -215,8 +301,9 @@ roughDonut <- function(data,
                        margin = list(top = 50, right = 20, bottom = 70, left = 100),
                        legend = TRUE,
                        legendPosition = "right",
+                       titleAlign = "center",
                        ...) {
-  
+
   config <- list(
     data = data,
     title = title,
@@ -231,20 +318,23 @@ roughDonut <- function(data,
     margin = margin,
     legend = legend,
     legendPosition = legendPosition,
+    titleAlign = titleAlign,
     ...
   )
-  
-  # Handle data frame input
   if (is.data.frame(data)) {
-    if (!is.null(labels) && !is.null(values)) {
-      config$labels = labels
-      config$values = values
+    if (is.null(labels) || is.null(values)) {
+      stop("'labels' and 'values' must be provided when supplying a data frame to roughDonut().", call. = FALSE)
     }
+
+    data <- sanitize_data_frame(data)
+    ensure_columns(data, c(labels, values), "Donut")
+    config$data <- data[, unique(c(labels, values)), drop = FALSE]
+    config$labels <- labels
+    config$values <- values
   }
-  
-  # Remove NULL values
-  config <- config[!sapply(config, is.null)]
-  
+
+  config <- drop_nulls(config)
+
   roughViz("Donut", config, width = width, height = height)
 }
 
@@ -270,8 +360,9 @@ roughPie <- function(data,
                      margin = list(top = 50, right = 20, bottom = 70, left = 100),
                      legend = TRUE,
                      legendPosition = "right",
+                     titleAlign = "center",
                      ...) {
-  
+
   config <- list(
     data = data,
     title = title,
@@ -286,20 +377,23 @@ roughPie <- function(data,
     margin = margin,
     legend = legend,
     legendPosition = legendPosition,
+    titleAlign = titleAlign,
     ...
   )
-  
-  # Handle data frame input
   if (is.data.frame(data)) {
-    if (!is.null(labels) && !is.null(values)) {
-      config$labels = labels
-      config$values = values
+    if (is.null(labels) || is.null(values)) {
+      stop("'labels' and 'values' must be provided when supplying a data frame to roughPie().", call. = FALSE)
     }
+
+    data <- sanitize_data_frame(data)
+    ensure_columns(data, c(labels, values), "Pie")
+    config$data <- data[, unique(c(labels, values)), drop = FALSE]
+    config$labels <- labels
+    config$values <- values
   }
-  
-  # Remove NULL values
-  config <- config[!sapply(config, is.null)]
-  
+
+  config <- drop_nulls(config)
+
   roughViz("Pie", config, width = width, height = height)
 }
 
@@ -354,8 +448,9 @@ roughLine <- function(data,
                       circle = TRUE,
                       circleRadius = 10,
                       circleRoughness = 2,
+                      titleAlign = "center",
                       ...) {
-  
+
   config <- list(
     data = data,
     title = title,
@@ -374,61 +469,62 @@ roughLine <- function(data,
     circle = circle,
     circleRadius = circleRadius,
     circleRoughness = circleRoughness,
+    titleAlign = titleAlign,
     ...
   )
-  
-  # Handle data frame input
   if (is.data.frame(data)) {
-    # For line charts, we need to convert data.frame to the expected format
-    # roughViz.js expects data as an object with series as keys and arrays as values
-    
-    # Extract x values if specified
+    data <- sanitize_data_frame(data)
+
     if (!is.null(x)) {
-      if (is.character(x) && x %in% names(data)) {
-        config$x = data[[x]]
-      }
+      ensure_columns(data, x, "Line")
+      config$x <- sanitize_axis_column(data[[x]])
     }
-    
-    # Convert y columns to the expected format
+
+    series_names <- c()
     line_data <- list()
-    
-    if (!is.null(y) && is.character(y) && y %in% names(data)) {
-      line_data[[y]] = as.numeric(data[[y]])
-    }
-    
-    if (!is.null(y2) && is.character(y2) && y2 %in% names(data)) {
-      line_data[[y2]] = as.numeric(data[[y2]])
-    }
-    
-    if (!is.null(y3) && is.character(y3) && y3 %in% names(data)) {
-      line_data[[y3]] = as.numeric(data[[y3]])
-    }
-    
-    # If no y columns specified, use all numeric columns except x
-    if (length(line_data) == 0) {
-      x_col <- if (!is.null(x) && is.character(x)) x else NULL
-      numeric_cols <- names(data)[sapply(data, is.numeric)]
-      if (!is.null(x_col)) {
-        numeric_cols <- numeric_cols[numeric_cols != x_col]
+
+    series_args <- c(y, y2, y3)
+    series_args <- series_args[!vapply(series_args, is.null, logical(1))]
+
+    if (length(series_args)) {
+      ensure_columns(data, series_args, "Line")
+      for (col in series_args) {
+        line_data[[col]] <- coerce_numeric_column(data[[col]], col, "Line")
+        series_names <- c(series_names, col)
       }
-      
+    }
+
+    if (!length(line_data)) {
+      x_col <- if (!is.null(x)) x else character()
+      numeric_cols <- names(data)[vapply(data, is.numeric, logical(1))]
+      numeric_cols <- setdiff(numeric_cols, x_col)
+      if (!length(numeric_cols)) {
+        stop("Line chart requires at least one numeric column for y values.", call. = FALSE)
+      }
       for (col in numeric_cols) {
-        line_data[[col]] = as.numeric(data[[col]])
+        line_data[[col]] <- coerce_numeric_column(data[[col]], col, "Line")
+        series_names <- c(series_names, col)
       }
     }
-    
-    # Use the converted data
-    config$data = line_data
+
+    config$data <- line_data
+    if (length(series_names) == 1) {
+      config$y <- series_names[[1]]
+    } else if (length(series_names) >= 2) {
+      config$y <- series_names[[1]]
+      config$y2 <- series_names[[2]]
+      if (length(series_names) >= 3) {
+        config$y3 <- series_names[[3]]
+      }
+    }
   }
-  
-  # Remove NULL values
-  config <- config[!sapply(config, is.null)]
-  
-  # Remove colors if it's an empty list (which becomes {} in JSON)
-  if ("colors" %in% names(config) && is.list(config$colors) && length(config$colors) == 0) {
+
+  config <- drop_nulls(config)
+
+  if ("colors" %in% names(config) && is.list(config$colors) && !length(config$colors)) {
     config$colors <- NULL
   }
-  
+
   roughViz("Line", config, width = width, height = height)
 }
 
@@ -481,8 +577,9 @@ roughScatter <- function(data,
                          axisStrokeWidth = 0.5,
                          radius = 8,
                          innerStrokeWidth = 1,
+                         titleAlign = "center",
                          ...) {
-  
+
   config <- list(
     data = data,
     title = title,
@@ -501,35 +598,30 @@ roughScatter <- function(data,
     axisStrokeWidth = axisStrokeWidth,
     radius = radius,
     innerStrokeWidth = innerStrokeWidth,
+    titleAlign = titleAlign,
     ...
   )
-  
-  # Handle data frame input - convert to columnar object format
   if (is.data.frame(data)) {
-    # Convert R data.frame to columnar object format expected by drawFromObject
-    scatter_data <- list()
-    for (col in names(data)) {
-      scatter_data[[col]] <- data[[col]]
+    data <- sanitize_data_frame(data)
+    if (is.null(x) || is.null(y)) {
+      stop("'x' and 'y' must be provided when supplying a data frame to roughScatter().", call. = FALSE)
     }
-    config$data <- scatter_data
-    
-    # Set column references
-    if (!is.null(x) && is.character(x) && x %in% names(data)) {
-      config$x <- x
+
+    ensure_columns(data, c(x, y), "Scatter")
+    if (!is.null(colorVar)) {
+      ensure_columns(data, colorVar, "Scatter")
     }
-    
-    if (!is.null(y) && is.character(y) && y %in% names(data)) {
-      config$y <- y
-    }
-    
-    if (!is.null(colorVar) && is.character(colorVar) && colorVar %in% names(data)) {
+
+    config$data <- data
+    config$x <- x
+    config$y <- y
+    if (!is.null(colorVar)) {
       config$colorVar <- colorVar
     }
   }
-  
-  # Remove NULL values
-  config <- config[!sapply(config, is.null)]
-  
+
+  config <- drop_nulls(config)
+
   roughViz("Scatter", config, width = width, height = height)
 }
 
@@ -576,8 +668,9 @@ roughStackedBar <- function(data,
                             axisStrokeWidth = 0.5,
                             innerStrokeWidth = 0,
                             padding = 0.1,
+                            titleAlign = "center",
                             ...) {
-  
+
   config <- list(
     data = data,
     title = title,
@@ -595,30 +688,32 @@ roughStackedBar <- function(data,
     axisStrokeWidth = axisStrokeWidth,
     innerStrokeWidth = innerStrokeWidth,
     padding = padding,
+    titleAlign = titleAlign,
     ...
   )
-  
-  # Handle data frame input - convert to array of objects format
   if (is.data.frame(data)) {
-    # Convert R data.frame to array of objects format expected by roughViz.js
-    stacked_data <- list()
-    for (i in 1:nrow(data)) {
-      row_obj <- list()
-      for (col in names(data)) {
-        row_obj[[col]] <- data[i, col]
-      }
-      stacked_data[[i]] <- row_obj
+    if (is.null(labels)) {
+      stop("'labels' must be provided when supplying a data frame to roughStackedBar().", call. = FALSE)
     }
-    config$data <- stacked_data
-    
-    if (!is.null(labels)) {
-      config$labels = labels
+
+    data <- sanitize_data_frame(data)
+    ensure_columns(data, labels, "StackedBar")
+
+    numeric_cols <- setdiff(names(data), labels)
+    if (!length(numeric_cols)) {
+      stop("StackedBar chart requires at least one value column besides 'labels'.", call. = FALSE)
     }
+
+    for (col in numeric_cols) {
+      data[[col]] <- coerce_numeric_column(data[[col]], col, "StackedBar")
+    }
+
+    config$data <- data
+    config$labels <- labels
   }
-  
-  # Remove NULL values
-  config <- config[!sapply(config, is.null)]
-  
+
+  config <- drop_nulls(config)
+
   roughViz("StackedBar", config, width = width, height = height)
 }
 

@@ -53,6 +53,25 @@ HTMLWidgets.widget({
           default:
             console.error('Unknown chart type: ' + x.chartType);
         }
+
+        // Handle title alignment after chart creation
+        if (x.config.titleAlign && x.config.titleAlign !== 'center') {
+          setTimeout(function() {
+            var titleElement = document.querySelector('#' + el.id + ' .title');
+            if (titleElement) {
+              var svg = titleElement.closest('svg');
+              var svgWidth = svg ? parseFloat(svg.getAttribute('width')) || x.config.width : x.config.width;
+
+              if (x.config.titleAlign === 'left') {
+                titleElement.setAttribute('text-anchor', 'start');
+                titleElement.setAttribute('x', 0);
+              } else if (x.config.titleAlign === 'right') {
+                titleElement.setAttribute('text-anchor', 'end');
+                titleElement.setAttribute('x', svgWidth);
+              }
+            }
+          }, 100); // Small delay to ensure chart is fully rendered
+        }
       },
 
       resize: function(width, height) {

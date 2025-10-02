@@ -2,7 +2,6 @@ Package: roughVizR
 Type: Package
 Title: Hand-Drawn, Sketchy Data Visualizations
 Version: 0.1.0
-Date: 2025-09-05
 Authors@R: c(
     person("Ashwin", "Malshe", email = "ashwin.malshe@utsa.edu", role = c("aut", "cre")),
     person("Jared", "Wilber", role = c("aut", "cph"), comment = "roughViz.js library")
@@ -17,15 +16,14 @@ BugReports: https://github.com/ashgreat/roughVizR/issues
 Depends:
     R (>= 3.5.0)
 Imports:
-    htmlwidgets (>= 0.8),
-    jsonlite,
-    magrittr
+    htmlwidgets (>= 0.8)
 Suggests:
     knitr,
     rmarkdown,
     htmltools,
-    shiny
+    shiny,
+    testthat (>= 3.1.0)
 Encoding: UTF-8
-LazyData: true
-RoxygenNote: 7.2.3
+RoxygenNote: 7.3.3
 VignetteBuilder: knitr
+Config/testthat/edition: 3
