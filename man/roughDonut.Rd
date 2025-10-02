@@ -19,7 +19,7 @@ roughDonut(
   bowing = 0,
   simplification = 0,
   font = 0,
-  margin = list(top = 50, right = 20, bottom = 70, left = 100),
+  margin = NULL,
   legend = TRUE,
   legendPosition = "right",
   titleAlign = "center",

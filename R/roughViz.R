@@ -166,7 +166,7 @@ roughBar <- function(data,
                      bowing = 0,
                      simplification = 0.2,
                      font = 0,
-                     margin = list(top = 50, right = 20, bottom = 70, left = 150),
+                     margin = NULL,
                      axisFontSize = "1rem",
                      axisRoughness = 0.5,
                      axisStrokeWidth = 0.5,
@@ -174,6 +174,9 @@ roughBar <- function(data,
                      padding = 0.1,
                      titleAlign = "center",
                      ...) {
+
+  user_margin <- margin
+  margin <- margin %||% list(top = 50, right = 20, bottom = 70, left = 150)
 
   config <- list(
     data = data,
@@ -233,7 +236,7 @@ roughBarH <- function(data,
                       bowing = 0,
                       simplification = 0.2,
                       font = 0,
-                      margin = list(top = 50, right = 20, bottom = 70, left = 150),
+                      margin = NULL,
                       axisFontSize = "1rem",
                       axisRoughness = 0.5,
                       axisStrokeWidth = 0.5,
@@ -243,6 +246,9 @@ roughBarH <- function(data,
                       ...) {
 
   margin_missing <- missing(margin)
+
+  user_margin <- margin
+  margin <- margin %||% list(top = 50, right = 20, bottom = 70, left = 150)
 
   config <- list(
     data = data,
@@ -276,7 +282,7 @@ roughBarH <- function(data,
     config$labels <- labels
     config$values <- values
 
-    if (margin_missing) {
+    if (is.null(user_margin)) {
       label_values <- as.character(config$data[[labels]])
       config$margin <- adjust_left_margin_for_labels(config$margin, label_values)
     }
@@ -324,11 +330,14 @@ roughDonut <- function(data,
                        bowing = 0,
                        simplification = 0,
                        font = 0,
-                       margin = list(top = 50, right = 20, bottom = 70, left = 100),
+                       margin = NULL,
                        legend = TRUE,
                        legendPosition = "right",
                        titleAlign = "center",
                        ...) {
+
+  user_margin <- margin
+  margin <- margin %||% list(top = 50, right = 20, bottom = 70, left = 100)
 
   config <- list(
     data = data,
@@ -383,11 +392,14 @@ roughPie <- function(data,
                      bowing = 0,
                      simplification = 0,
                      font = 0,
-                     margin = list(top = 50, right = 20, bottom = 70, left = 100),
+                     margin = NULL,
                      legend = TRUE,
                      legendPosition = "right",
                      titleAlign = "center",
                      ...) {
+
+  user_margin <- margin
+  margin <- margin %||% list(top = 50, right = 20, bottom = 70, left = 100)
 
   config <- list(
     data = data,
@@ -467,7 +479,7 @@ roughLine <- function(data,
                       bowing = 0,
                       simplification = 0.2,
                       font = 0,
-                      margin = list(top = 50, right = 20, bottom = 70, left = 100),
+                      margin = NULL,
                       axisFontSize = "1rem",
                       axisRoughness = 0.5,
                       axisStrokeWidth = 0.5,
@@ -476,6 +488,9 @@ roughLine <- function(data,
                       circleRoughness = 2,
                       titleAlign = "center",
                       ...) {
+
+  user_margin <- margin
+  margin <- margin %||% list(top = 50, right = 20, bottom = 70, left = 100)
 
   config <- list(
     data = data,
@@ -597,7 +612,7 @@ roughScatter <- function(data,
                          bowing = 0,
                          simplification = 0.2,
                          font = 0,
-                         margin = list(top = 50, right = 20, bottom = 70, left = 100),
+                         margin = NULL,
                          axisFontSize = "1rem",
                          axisRoughness = 0.5,
                          axisStrokeWidth = 0.5,
@@ -605,6 +620,9 @@ roughScatter <- function(data,
                          innerStrokeWidth = 1,
                          titleAlign = "center",
                          ...) {
+
+  user_margin <- margin
+  margin <- margin %||% list(top = 50, right = 20, bottom = 70, left = 100)
 
   config <- list(
     data = data,
@@ -688,7 +706,7 @@ roughStackedBar <- function(data,
                             bowing = 0,
                             simplification = 0.2,
                             font = 0,
-                            margin = list(top = 50, right = 20, bottom = 70, left = 150),
+                            margin = NULL,
                             axisFontSize = "1rem",
                             axisRoughness = 0.5,
                             axisStrokeWidth = 0.5,
@@ -696,6 +714,9 @@ roughStackedBar <- function(data,
                             padding = 0.1,
                             titleAlign = "center",
                             ...) {
+
+  user_margin <- margin
+  margin <- margin %||% list(top = 50, right = 20, bottom = 70, left = 150)
 
   config <- list(
     data = data,

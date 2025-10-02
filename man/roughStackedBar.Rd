@@ -18,7 +18,7 @@ roughStackedBar(
   bowing = 0,
   simplification = 0.2,
   font = 0,
-  margin = list(top = 50, right = 20, bottom = 70, left = 150),
+  margin = NULL,
   axisFontSize = "1rem",
   axisRoughness = 0.5,
   axisStrokeWidth = 0.5,
