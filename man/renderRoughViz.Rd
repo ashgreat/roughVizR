@@ -7,12 +7,33 @@
 renderRoughViz(expr, env = parent.frame(), quoted = FALSE)
 }
 \arguments{
-\item{expr}{Expression to render}
+\item{expr}{Expression that returns a roughViz widget.}
 
-\item{env}{Environment}
+\item{env}{Environment in which to evaluate `expr`.}
 
-\item{quoted}{Is expression quoted}
+\item{quoted}{Should the expression be treated as quoted? Set to `TRUE` when
+calling from another function.}
+}
+\value{
+A server-side function suitable for use inside `output$<id> <-`.
 }
 \description{
 Shiny render function for roughViz
+}
+\examples{
+\dontrun{
+  server <- function(input, output, session) {
+    output$sales_plot <- renderRoughViz({
+      roughBar(
+        data = data.frame(
+          labels = c("A", "B", "C"),
+          values = c(3, 5, 2)
+        ),
+        labels = "labels",
+        values = "values"
+      )
+    })
+  }
+}
+
 }

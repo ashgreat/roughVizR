@@ -1,0 +1,83 @@
+url: https://ashgreat.github.io/roughVizR/
+
+logo: man/figures/logo.png
+favicon: man/figures/favicon.png
+
+template:
+  bootstrap: 5
+  bootswatch: lux
+  params:
+    headroom: false
+  bslib:
+    primary: "#f25c54"
+    secondary: "#2a9d8f"
+    bg: "#fdfdfd"
+    fg: "#1e1e1e"
+
+home:
+  title: "roughVizR"
+  description: "Hand-drawn, sketchy charts for R using the roughViz.js engine."
+  links:
+    - text: "Function reference"
+      href: reference/index.html
+    - text: "Example gallery"
+      href: articles/mpg-gallery.html
+
+new_process: false
+
+navbar:
+  structure:
+    left: [home, reference, articles, news]
+    right: [github]
+  components:
+    home:
+      text: "Overview"
+      href: index.html
+    reference:
+      text: "Reference"
+      href: reference/index.html
+    articles:
+      text: "Examples"
+      menu:
+        - text: "MPG gallery"
+          href: articles/mpg-gallery.html
+    news:
+      text: "Changelog"
+      href: news/index.html
+    github:
+      icon: fa-github
+      href: https://github.com/ashgreat/roughVizR
+      aria-label: "GitHub repository"
+
+reference:
+  - title: Core widget tooling
+    desc: >-
+      Low-level constructor and helpers for embedding roughViz widgets.
+    contents:
+      - roughViz
+      - roughVizOutput
+      - renderRoughViz
+  - title: Bar charts
+    desc: "Sketchy bar chart variations."
+    contents:
+      - roughBar
+      - roughBarH
+      - roughStackedBar
+  - title: Circular charts
+    desc: "Pie- and donut-style charts."
+    contents:
+      - roughPie
+      - roughDonut
+  - title: Line and point charts
+    desc: "Line and scatter plot helpers."
+    contents:
+      - roughLine
+      - roughScatter
+
+articles:
+  - title: Examples
+    contents:
+      - mpg-gallery
+
+news:
+  one_page: true

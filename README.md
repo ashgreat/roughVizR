@@ -10,25 +10,25 @@ Create beautiful hand-drawn style charts directly in R! This package provides R 
 ## Gallery
 
 ### Bar Chart
-![Bar Chart](screenshots/bar_plot.png)
+![Bar Chart](man/figures/bar_plot.png)
 
 ### Scatter Plot with Color Grouping
-![Scatter Plot](screenshots/scatter_plot.png)
+![Scatter Plot](man/figures/scatter_plot.png)
 
 ### Line Graph
-![Line Graph](screenshots/line_graph.png)
+![Line Graph](man/figures/line_graph.png)
 
 ### Pie Chart
-![Pie Chart](screenshots/pie_chart.png)
+![Pie Chart](man/figures/pie_chart.png)
 
 ### Donut Chart
-![Donut Chart](screenshots/donut_chart.png)
+![Donut Chart](man/figures/donut_chart.png)
 
 ### Horizontal Bar Chart
-![Horizontal Bar Chart](screenshots/horizontal_bar_chart.png)
+![Horizontal Bar Chart](man/figures/horizontal_bar_chart.png)
 
 ### Stacked Bar Chart
-![Stacked Bar Chart](screenshots/stacked_bar_plot.png)
+![Stacked Bar Chart](man/figures/stacked_bar_plot.png)
 
 ## Installation
 
@@ -170,6 +170,21 @@ roughStackedBar(
   colors = c("#ff6b6b", "#4ecdc4", "#45b7d1")
 )
 ```
+
+## Function overview
+
+| Function | Description | Key arguments |
+| --- | --- | --- |
+| `roughBar()` | Vertical sketchy bar chart. | `data`, `labels`, `values`, `color`, `titleAlign` |
+| `roughBarH()` | Horizontal variant of `roughBar()`. | `data`, `labels`, `values`, `margin` |
+| `roughStackedBar()` | Stacked column chart for parts-of-a-whole. | `data`, `labels`, `colors` |
+| `roughDonut()` | Donut chart with optional legend. | `data`, `labels`, `values`, `colors`, `legendPosition` |
+| `roughPie()` | Pie chart wrapper around `roughDonut()`. | `data`, `labels`, `values`, `colors` |
+| `roughLine()` | Single or multi-series line chart. | `data`, `x`, `y`, `y2`, `circle` |
+| `roughScatter()` | Scatter plot with optional grouping. | `data`, `x`, `y`, `colorVar`, `radius` |
+| `roughViz()` | Low-level widget constructor used by helpers. | `chartType`, `config`, `width`, `height` |
+| `roughVizOutput()` | UI placeholder for Shiny apps. | `outputId`, `width`, `height` |
+| `renderRoughViz()` | Server-side renderer for Shiny. | `expr`, `env`, `quoted` |
 
 ## Chart Options
 

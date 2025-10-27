@@ -32,52 +32,80 @@ roughScatter(
 )
 }
 \arguments{
-\item{data}{Data frame or list containing the data}
+\item{data}{A `data.frame` or list containing the x/y coordinates. When
+passing a data frame you must also provide the column names in `x` and `y`.}
 
-\item{x}{Column name for x values}
+\item{x}{String naming the column that holds the x values.}
 
-\item{y}{Column name for y values}
+\item{y}{String naming the column that holds the y values.}
 
-\item{title}{Chart title}
+\item{title}{Optional title placed above the chart.}
 
-\item{width}{Chart width}
+\item{width}{Optional width of the widget (numeric pixels or CSS units).}
 
-\item{height}{Chart height}
+\item{height}{Optional height of the widget (numeric pixels or CSS units).}
 
-\item{colorVar}{Column name for color variable}
+\item{colorVar}{Optional column name indicating a grouping variable used for
+colouring the points.}
 
-\item{colors}{Array of colors}
+\item{colors}{Character vector of colours corresponding to the distinct
+levels in `colorVar`.}
 
-\item{highlightLabel}{Label to highlight}
+\item{highlightLabel}{Optional label that should be accentuated using the
+`highlight` colour.}
 
-\item{roughness}{Roughness level}
+\item{roughness}{Roughness level forwarded to roughViz.js.}
 
-\item{fillStyle}{Fill style}
+\item{fillStyle}{Fill style for the points.}
 
-\item{fillWeight}{Fill weight}
+\item{fillWeight}{Thickness of the fill pattern strokes.}
 
-\item{strokeWidth}{Stroke width}
+\item{strokeWidth}{Outline stroke width for the points.}
 
-\item{bowing}{Bowing effect}
+\item{bowing}{Amount of curvature applied to straight segments.}
 
-\item{simplification}{Simplification level}
+\item{simplification}{Simplification tolerance for shapes.}
 
-\item{font}{Font style}
+\item{font}{Font family reference (`0`, `1`, or custom name).}
 
-\item{margin}{List with margins}
+\item{margin}{Named list describing widget margins.}
 
-\item{axisFontSize}{Axis font size}
+\item{axisFontSize}{Font size used for axis labels (CSS units or numbers).}
 
-\item{axisRoughness}{Axis roughness}
+\item{axisRoughness}{Roughness setting applied to axes.}
 
-\item{axisStrokeWidth}{Axis stroke width}
+\item{axisStrokeWidth}{Axis line stroke width.}
 
-\item{radius}{Circle radius}
+\item{radius}{Circle radius for the points.}
 
-\item{innerStrokeWidth}{Inner stroke width}
+\item{innerStrokeWidth}{Stroke width used inside points.}
 
-\item{...}{Additional configuration options}
+\item{titleAlign}{Horizontal alignment for the title.}
+
+\item{...}{Additional named options forwarded to roughViz.js.}
+}
+\value{
+A scatter plot `htmlwidget`.
 }
 \description{
-Create a rough scatter plot
+Displays points with an optional colour grouping and highlight label.
+}
+\details{
+When a data frame is supplied the function verifies that the referenced
+columns exist, sanitises their types, and reshapes them into the column-based
+structure that roughViz.js expects (`x`/`y` vectors plus any additional
+fields such as `colorVar`).
+}
+\examples{
+if (interactive()) {
+  roughScatter(
+    data = iris,
+    x = "Sepal.Length",
+    y = "Petal.Length",
+    colorVar = "Species",
+    title = "Iris measurements",
+    radius = 10
+  )
+}
+
 }

@@ -1,0 +1,9 @@
+pandoc: 3.8.2
+pkgdown: 2.1.3
+pkgdown_sha: ~
+articles:
+  mpg-gallery: mpg-gallery.html
+last_built: 2025-10-27T19:31Z
+urls:
+  reference: https://ashgreat.github.io/roughVizR/reference
+  article: https://ashgreat.github.io/roughVizR/articles

@@ -27,44 +27,79 @@ roughDonut(
 )
 }
 \arguments{
-\item{data}{Data frame or list containing the data}
+\item{data}{A `data.frame` or named list. With a data frame you must supply
+column names via `labels` and `values`. With a list the expected structure
+is `list(labels = <character>, values = <numeric>)`.}
 
-\item{labels}{Column name for labels}
+\item{labels}{String giving the column name used for labels when `data` is a
+data frame.}
 
-\item{values}{Column name for values}
+\item{values}{String naming the column that contains numeric values when
+`data` is a data frame.}
 
-\item{title}{Chart title}
+\item{title}{Optional chart heading.}
 
-\item{width}{Chart width}
+\item{width}{Optional width of the widget (pixels or CSS lengths).}
 
-\item{height}{Chart height}
+\item{height}{Optional height of the widget (pixels or CSS lengths).}
 
-\item{colors}{Array of colors}
+\item{colors}{Character vector of fill colours. Leave `NULL` to let the
+library choose defaults.}
 
-\item{roughness}{Roughness level (0-10)}
+\item{roughness}{Roughness level forwarded to roughViz.js.}
 
-\item{fillStyle}{Fill style}
+\item{fillStyle}{Fill style, such as `"hachure"` or `"zigzag"`.}
 
-\item{fillWeight}{Fill weight}
+\item{fillWeight}{Thickness of the fill pattern strokes.}
 
-\item{strokeWidth}{Stroke width}
+\item{strokeWidth}{Width of the slice outlines.}
 
-\item{bowing}{Bowing effect}
+\item{bowing}{Amount of curvature applied to straight lines.}
 
-\item{simplification}{Simplification level}
+\item{simplification}{Simplification tolerance for curves.}
 
-\item{font}{Font style}
+\item{font}{Font family reference (`0`, `1`, or custom name).}
 
-\item{margin}{List with margins}
+\item{margin}{Named list describing the plot margins.}
 
-\item{legend}{Show legend}
+\item{legend}{Logical flag controlling whether the legend is rendered.}
 
-\item{legendPosition}{Legend position ('top', 'bottom', 'left', 'right')}
+\item{legendPosition}{Position of the legend (`"top"`, `"bottom"`, `"left"`,
+or `"right"`).}
 
-\item{titleAlign}{Title alignment ('left', 'center', 'right')}
+\item{titleAlign}{Horizontal alignment of the title (`"left"`, `"center"`,
+or `"right"`).}
 
-\item{...}{Additional configuration options}
+\item{...}{Additional named options forwarded to the underlying JavaScript
+widget.}
+}
+\value{
+A donut chart `htmlwidget`.
 }
 \description{
-Create a rough donut chart
+Produces a filled donut chart with the characteristic roughViz hand-drawn
+style.
+}
+\details{
+When a data frame is supplied, the function sanitises the columns and ensures
+that the value column is numeric after coercion. Helpful error messages are
+raised if mandatory columns are missing.
+}
+\examples{
+if (interactive()) {
+  categories <- data.frame(
+    segment = c("Marketing", "R&D", "Operations", "HR"),
+    spend = c(25, 30, 28, 17)
+  )
+
+  roughDonut(
+    data = categories,
+    labels = "segment",
+    values = "spend",
+    title = "Budget allocation",
+    colors = c("#ff6b6b", "#4ecdc4", "#45b7d1", "#f9ca24"),
+    legendPosition = "bottom"
+  )
+}
+
 }

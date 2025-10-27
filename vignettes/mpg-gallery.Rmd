@@ -1,0 +1,113 @@
+---
+title: "MPG Gallery"
+author: "roughVizR Team"
+date: "`r format(Sys.Date(), '%B %d, %Y')`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{MPG Gallery}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(message = FALSE, warning = FALSE)
+```
+
+```{r libraries}
+library(roughVizR)
+library(ggplot2)
+```
+
+The `ggplot2::mpg` dataset gives us real-world fuel economy measurements across dozens of vehicle models. This vignette turns those observations into a playful gallery of rough, sketch-inspired charts using `roughVizR`.
+
+## Prepare the dataset
+
+We will derive a few helpful summaries for later use:
+
+```{r prepare-data}
+mpg_data <- mpg
+
+avg_hwy <- aggregate(hwy ~ class, data = mpg_data, FUN = function(x) round(mean(x), 1))
+colnames(avg_hwy) <- c("class", "avg_hwy")
+
+manufacturer_counts <- aggregate(model ~ manufacturer, data = mpg_data, FUN = length)
+colnames(manufacturer_counts) <- c("manufacturer", "model_count")
+manufacturer_counts <- manufacturer_counts[order(-manufacturer_counts$model_count), ]
+manufacturer_counts <- head(manufacturer_counts, 8)
+
+class_counts <- as.data.frame(table(mpg_data$class))
+colnames(class_counts) <- c("class", "count")
+
+palette_main <- c("#ef476f", "#ffd166", "#06d6a0", "#118ab2", "#073b4c", "#f25c54", "#8338ec", "#ffb703")
+```
+
+The palette above leans on saturated hues so that each category pops even with the edgy line work that `roughVizR` applies.
+
+## Average highway mileage by vehicle class
+
+```{r bar-chart, fig.cap="Average highway mileage by vehicle class"}
+roughBar(
+  avg_hwy,
+  labels = "class",
+  values = "avg_hwy",
+  title = "Average Highway Mileage",
+  color = palette_main[1],
+  highlight = palette_main[4],
+  axisFontSize = "0.9rem",
+  margin = list(top = 60, right = 40, bottom = 90, left = 160)
+)
+```
+
+## Most common manufacturers in the dataset
+
+```{r horizontal-bar, fig.cap="Top manufacturers by number of models"}
+roughBarH(
+  manufacturer_counts,
+  labels = "manufacturer",
+  values = "model_count",
+  title = "Top Manufacturers in MPG",
+  color = palette_main[6],
+  highlight = palette_main[1],
+  axisFontSize = "0.9rem",
+  margin = list(top = 60, right = 50, bottom = 90, left = 180)
+)
+```
+
+## Vehicle class mix
+
+```{r pie-chart, fig.cap="Distribution of vehicles by class"}
+roughPie(
+  class_counts,
+  labels = "class",
+  values = "count",
+  title = "Vehicle Class Share",
+  colors = palette_main,
+  legend = TRUE,
+  legendPosition = "right"
+)
+```
+
+## Highway mileage vs. engine displacement
+
+```{r scatter-plot, fig.cap="Highway mileage as a function of engine displacement"}
+classes <- sort(unique(mpg_data$class))
+scatter_colors <- palette_main[seq_along(classes)]
+
+roughScatter(
+  mpg_data,
+  x = "displ",
+  y = "hwy",
+  colorVar = "class",
+  colors = scatter_colors,
+  title = "Mileage vs. Engine Size",
+  axisFontSize = "0.9rem",
+  radius = 9,
+  margin = list(top = 60, right = 40, bottom = 80, left = 90)
+)
+```
+
+The scatter plot maps highway mileage (`hwy`) to the vertical axis and engine displacement (`displ`) to the horizontal axis. Coloring the points by vehicle class highlights how compact cars dominate the high-efficiency zone while SUVs cluster toward the lower right.
+
+---
+
+With `roughVizR`, you can swap in different fields from `mpg` (or any tidy data source) and keep the hand-drawn aesthetic without extra effort.

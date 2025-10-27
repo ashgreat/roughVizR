@@ -33,54 +33,89 @@ roughLine(
 )
 }
 \arguments{
-\item{data}{Data frame or list containing the data}
+\item{data}{A `data.frame` or list with numerical series. When working with a
+data frame you can point to up to three value columns using `y`, `y2`, and
+`y3`. Any additional numeric columns (apart from `x`) are automatically
+detected when those arguments are omitted.}
 
-\item{x}{Column name for x values}
+\item{x}{Optional column name supplying the x-axis values.}
 
-\item{y}{Column name for y values (can be multiple)}
+\item{y}{Column name of the primary series to plot.}
 
-\item{y2}{Optional second y series}
+\item{y2}{Optional column name containing a second series.}
 
-\item{y3}{Optional third y series}
+\item{y3}{Optional column name containing a third series.}
 
-\item{title}{Chart title}
+\item{title}{Optional title displayed above the chart.}
 
-\item{width}{Chart width}
+\item{width}{Optional width of the widget (numeric pixels or CSS units).}
 
-\item{height}{Chart height}
+\item{height}{Optional height of the widget (numeric pixels or CSS units).}
 
-\item{colors}{Array of colors for multiple lines}
+\item{colors}{Vector of colours to recycle across the series. Ignored when
+`NULL`.}
 
-\item{roughness}{Roughness level}
+\item{roughness}{Roughness level forwarded to roughViz.js.}
 
-\item{fillStyle}{Fill style}
+\item{fillStyle}{Fill style selection such as `"hachure"` or `"cross-hatch"`.}
 
-\item{fillWeight}{Fill weight}
+\item{fillWeight}{Thickness of the fill pattern strokes.}
 
-\item{strokeWidth}{Stroke width}
+\item{strokeWidth}{Width of the line strokes.}
 
-\item{bowing}{Bowing effect}
+\item{bowing}{Amount of curvature applied to straight segments.}
 
-\item{simplification}{Simplification level}
+\item{simplification}{Simplification tolerance for curves.}
 
-\item{font}{Font style}
+\item{font}{Font family reference (`0`, `1`, or custom name).}
 
-\item{margin}{List with margins}
+\item{margin}{Named list defining the plot margins.}
 
-\item{axisFontSize}{Axis font size}
+\item{axisFontSize}{Font size used for axis labels (CSS units or numbers).}
 
-\item{axisRoughness}{Axis roughness}
+\item{axisRoughness}{Roughness setting applied to axes.}
 
-\item{axisStrokeWidth}{Axis stroke width}
+\item{axisStrokeWidth}{Axis line stroke width.}
 
-\item{circle}{Show circles at data points}
+\item{circle}{Logical flag indicating whether to draw point markers.}
 
-\item{circleRadius}{Circle radius}
+\item{circleRadius}{Radius of the optional circle markers.}
 
-\item{circleRoughness}{Circle roughness}
+\item{circleRoughness}{Roughness level applied to the circle markers.}
 
-\item{...}{Additional configuration options}
+\item{titleAlign}{Horizontal alignment of the title (`"left"`, `"center"`,
+or `"right"`).}
+
+\item{...}{Additional named options forwarded to roughViz.js.}
+}
+\value{
+A line chart `htmlwidget`.
 }
 \description{
-Create a rough line chart
+Renders one or more sketchy line series with optional point markers.
+}
+\details{
+When a data frame is supplied the function sanitises column types, coerces
+value series to numeric (with validation), and repackages them into the list
+format expected by roughViz.js. Missing columns trigger informative errors.
+}
+\examples{
+if (interactive()) {
+  trends <- data.frame(
+    month = month.abb[1:6],
+    product_a = c(10, 14, 12, 18, 17, 20),
+    product_b = c(8, 11, 13, 16, 15, 19)
+  )
+
+  roughLine(
+    data = trends,
+    x = "month",
+    y = "product_a",
+    y2 = "product_b",
+    title = "Half-year sales trend",
+    colors = c("#f94144", "#577590"),
+    circle = TRUE
+  )
+}
+
 }

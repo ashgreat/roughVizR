@@ -31,52 +31,86 @@ roughBarH(
 )
 }
 \arguments{
-\item{data}{Data frame or list containing the data}
+\item{data}{A `data.frame` (preferred) or named list containing the data to
+visualise. When supplying a data frame you must also provide the column
+names in `labels` and `values`. When supplying a list it should already
+contain `labels` and `values` elements compatible with roughViz.js.}
 
-\item{labels}{Column name for labels (x-axis)}
+\item{labels}{Column name (string) that identifies the x-axis labels when
+`data` is a data frame.}
 
-\item{values}{Column name for values (y-axis)}
+\item{values}{Column name (string) that identifies the numeric values when
+`data` is a data frame.}
 
-\item{title}{Chart title}
+\item{title}{Optional chart title rendered above the plot.}
 
-\item{width}{Chart width}
+\item{width}{Optional width of the widget; accepts numbers (pixels) or CSS
+length strings.}
 
-\item{height}{Chart height}
+\item{height}{Optional height of the widget; accepts numbers (pixels) or CSS
+length strings.}
 
-\item{color}{Bar color}
+\item{color}{Fill colour for the bars.}
 
-\item{highlight}{Highlight color}
+\item{highlight}{Highlight colour used for bar outlines and hover effects.}
 
-\item{roughness}{Roughness level (0-10)}
+\item{roughness}{Numeric sketchiness factor used by rough.js (`0` for crisp
+lines, larger values for wobble).}
 
-\item{fillStyle}{Fill style ('hachure', 'cross-hatch', 'zigzag', 'dashed', 'solid', 'zigzag-line')}
+\item{fillStyle}{Character string describing the hatch pattern. Common values
+include `"hachure"`, `"cross-hatch"`, `"zigzag"`, `"dashed"`, `"solid"`, and
+`"zigzag-line"`.}
 
-\item{fillWeight}{Fill weight}
+\item{fillWeight}{Thickness of the fill pattern strokes (numeric); `NULL`
+lets roughViz.js pick a default.}
 
-\item{strokeWidth}{Stroke width}
+\item{strokeWidth}{Width of the bar outlines in pixels.}
 
-\item{bowing}{Bowing effect}
+\item{bowing}{Amount of curvature applied to straight lines.}
 
-\item{simplification}{Simplification level}
+\item{simplification}{Numeric tolerance used to simplify curves.}
 
-\item{font}{Font style (0 for 'gaegu', 1 for 'indie flower', 2 for custom)}
+\item{font}{Either `0` (Gaegu), `1` (Indie Flower), or the name of a custom
+font family available in the page.}
 
-\item{margin}{List with top, right, bottom, left margins}
+\item{margin}{Named list with entries `top`, `right`, `bottom`, and `left`
+controlling whitespace around the canvas. Leave `NULL` to rely on sensible
+defaults that expand automatically for long labels.}
 
-\item{axisFontSize}{Axis font size}
+\item{axisFontSize}{Font size used for axis labels (CSS units or numbers).}
 
-\item{axisRoughness}{Axis roughness}
+\item{axisRoughness}{Roughness setting applied to the axes.}
 
-\item{axisStrokeWidth}{Axis stroke width}
+\item{axisStrokeWidth}{Stroke width for the axes.}
 
-\item{innerStrokeWidth}{Inner stroke width}
+\item{innerStrokeWidth}{Numeric stroke width for bar interiors.}
 
-\item{padding}{Padding between bars}
+\item{padding}{Space between bars expressed as a proportion of bar width.}
 
-\item{titleAlign}{Title alignment ('left', 'center', 'right')}
+\item{titleAlign}{Horizontal alignment for the title. One of `"left"`,
+`"center"`, or `"right"`.}
 
-\item{...}{Additional configuration options}
+\item{...}{Additional named options passed straight through to roughViz.js
+after validation. Use this to experiment with new features that have not
+yet been wrapped explicitly.}
+}
+\value{
+An `htmlwidget` displaying a horizontal bar chart.
 }
 \description{
-Create a rough horizontal bar chart
+Horizontal variant of [roughBar()] that automatically swaps the axes and
+expands the left margin when labels are wide.
+}
+\examples{
+if (interactive()) {
+  cars <- transform(mtcars, model = rownames(mtcars))
+  roughBarH(
+    data = cars,
+    labels = "model",
+    values = "mpg",
+    title = "Fuel economy (mpg)",
+    color = "skyblue"
+  )
+}
+
 }

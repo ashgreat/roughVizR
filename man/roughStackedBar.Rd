@@ -29,46 +29,79 @@ roughStackedBar(
 )
 }
 \arguments{
-\item{data}{Data frame or list containing the data}
+\item{data}{A `data.frame` or named list. With a data frame one column should
+contain the category labels while the remaining numeric columns represent
+the individual stacks.}
 
-\item{labels}{Column name for labels}
+\item{labels}{Column name that holds the category labels when `data` is a
+data frame.}
 
-\item{title}{Chart title}
+\item{title}{Optional heading.}
 
-\item{width}{Chart width}
+\item{width}{Optional width of the widget (numeric pixels or CSS units).}
 
-\item{height}{Chart height}
+\item{height}{Optional height of the widget (numeric pixels or CSS units).}
 
-\item{colors}{Array of colors}
+\item{colors}{Character vector of fill colours recycled across the stacks.}
 
-\item{roughness}{Roughness level}
+\item{roughness}{Roughness level forwarded to roughViz.js.}
 
-\item{fillStyle}{Fill style}
+\item{fillStyle}{Fill style for the stack segments.}
 
-\item{fillWeight}{Fill weight}
+\item{fillWeight}{Thickness of the fill pattern strokes.}
 
-\item{strokeWidth}{Stroke width}
+\item{strokeWidth}{Outline stroke width.}
 
-\item{bowing}{Bowing effect}
+\item{bowing}{Amount of curvature applied to straight segments.}
 
-\item{simplification}{Simplification level}
+\item{simplification}{Simplification tolerance for shapes.}
 
-\item{font}{Font style}
+\item{font}{Font family reference (`0`, `1`, or custom name).}
 
-\item{margin}{List with margins}
+\item{margin}{Named list of margins around the plot.}
 
-\item{axisFontSize}{Axis font size}
+\item{axisFontSize}{Font size used for axis labels (CSS units or numbers).}
 
-\item{axisRoughness}{Axis roughness}
+\item{axisRoughness}{Roughness setting applied to axes.}
 
-\item{axisStrokeWidth}{Axis stroke width}
+\item{axisStrokeWidth}{Axis line stroke width.}
 
-\item{innerStrokeWidth}{Inner stroke width}
+\item{innerStrokeWidth}{Stroke width drawn inside the stacked bars.}
 
-\item{padding}{Padding between bars}
+\item{padding}{Gap between categories (0-1 range).}
 
-\item{...}{Additional configuration options}
+\item{titleAlign}{Horizontal alignment of the title (`"left"`, `"center"`,
+or `"right"`).}
+
+\item{...}{Additional named options forwarded to roughViz.js.}
+}
+\value{
+A stacked bar `htmlwidget`.
 }
 \description{
-Create a rough stacked bar chart
+Displays stacked columns suitable for showing parts-of-a-whole across
+categories.
+}
+\details{
+When `data` is a data frame the function verifies the presence of `labels`
+and at least one additional numeric column. It then coerces those numeric
+columns to double precision before handing the data to roughViz.js.
+}
+\examples{
+if (interactive()) {
+  revenue <- data.frame(
+    quarter = c("Q1", "Q2", "Q3", "Q4"),
+    hardware = c(5, 6, 4, 7),
+    software = c(3, 4, 6, 5),
+    services = c(2, 3, 2, 4)
+  )
+
+  roughStackedBar(
+    data = revenue,
+    labels = "quarter",
+    title = "Product mix by quarter",
+    colors = c("#90be6d", "#f9c74f", "#f94144")
+  )
+}
+
 }

@@ -7,16 +7,61 @@
 roughViz(chartType, config, width = NULL, height = NULL, elementId = NULL)
 }
 \arguments{
-\item{chartType}{The type of chart to create}
+\item{chartType}{Character string naming the roughViz.js chart to render
+(e.g. `"Bar"`, `"Pie"`, `"Scatter"`). See <https://github.com/jwilber/roughViz>
+for the complete catalogue.}
 
-\item{config}{Configuration list for the chart}
+\item{config}{Named list describing the chart configuration. The list should
+normally include a `data` entry (either a `data.frame` or a nested list
+matching the roughViz.js API) along with any visual options accepted by the
+corresponding JavaScript chart.}
 
-\item{width}{Widget width}
+\item{width}{Optional width passed to [htmlwidgets::createWidget()]. Supply a
+numeric value (pixels) or valid CSS units (character strings). When omitted
+the widget scales responsively.}
 
-\item{height}{Widget height}
+\item{height}{Optional height passed to [htmlwidgets::createWidget()]. Supply
+a numeric value (pixels) or valid CSS units (character strings). When
+omitted the widget scales responsively.}
 
-\item{elementId}{Element ID}
+\item{elementId}{Optional DOM id to target when embedding the widget in a
+larger document.}
+}
+\value{
+An [`htmlwidgets::htmlwidget`] ready for printing or embedding.
 }
 \description{
-Create a roughViz widget
+Low level constructor that powers all exported chart helpers in
+**roughVizR**. Most users will call a convenience wrapper such as
+[roughBar()] or [roughScatter()], but this function can be handy when you
+already have a fully formed configuration list.
+}
+\details{
+The helper functions exported by the package build up the `config` list for
+you, validating column names and coercing values where appropriate. When
+calling `roughViz()` directly it is your responsibility to follow the
+roughViz.js schema. Any additional arguments are ignored; use the `config`
+list to supply custom settings.
+}
+\section{Passing additional options}{
+
+Every chart accepts a `...` argument in its helper that is appended to the
+configuration list after validation. This makes it possible to reach new
+options introduced by roughViz.js without waiting for a package update.
+}
+
+\examples{
+if (interactive()) {
+  roughViz(
+    chartType = "Bar",
+    config = list(
+      data = list(
+        labels = c("A", "B", "C"),
+        values = c(3, 5, 2)
+      ),
+      title = "Quick sketch"
+    )
+  )
+}
+
 }

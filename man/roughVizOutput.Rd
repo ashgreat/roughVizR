@@ -7,12 +7,25 @@
 roughVizOutput(outputId, width = "100\%", height = "400px")
 }
 \arguments{
-\item{outputId}{Output ID}
+\item{outputId}{Output slot identifier used in the Shiny UI.}
 
-\item{width}{Width}
+\item{width}{Output width. Accepts valid CSS size values such as `"100%"` or
+`"400px"`.}
 
-\item{height}{Height}
+\item{height}{Output height. Accepts valid CSS size values such as `"100%"`
+or `"400px"`.}
+}
+\value{
+A UI definition to be used in `ui` definitions.
 }
 \description{
-Shiny output for roughViz
+Creates a UI placeholder for a roughViz widget in a Shiny application.
+}
+\examples{
+\dontrun{
+  ui <- fluidPage(
+    roughVizOutput("sales_plot")
+  )
+}
+
 }

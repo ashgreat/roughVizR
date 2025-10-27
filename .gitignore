@@ -46,3 +46,4 @@ vignettes/*.pdf
 *test*.html
 *debug*.html
 *temp*.html
+pkgcache/
